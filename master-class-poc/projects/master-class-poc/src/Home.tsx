@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { FaRocket } from 'react-icons/fa'
+import { FaReddit, FaRocket } from 'react-icons/fa'
 import { FiAlertCircle, FiClock, FiDollarSign, FiGithub, FiLinkedin, FiMail, FiMenu, FiTwitter, FiUsers, FiX } from 'react-icons/fi'
 import { SiAlgorand, SiCashapp, SiMastercard, SiPaypal, SiVisa, SiWesternunion } from 'react-icons/si'
 import { HashLink } from 'react-router-hash-link'
@@ -336,7 +336,7 @@ const Home = () => {
                   </span>
                 </HashLink>
                 <a
-                  href="mailto:info@algoremit.com"
+                  href="mailto:ahad06074@gmail.com"
                   className="px-8 py-4 rounded-full font-bold bg-white text-amber-600 border-2 border-amber-600 hover:bg-amber-50 transition-all duration-300 shadow-lg hover:shadow-amber-400/20 inline-flex items-center"
                 >
                   <FiMail className="mr-2" /> Contact Us
@@ -382,17 +382,52 @@ const Home = () => {
                   </div>
 
                   <div className="flex gap-6 text-xl">
-                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                    <a
+                      href="https://twitter.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Twitter"
+                      className="text-gray-600 hover:text-amber-600 transition-colors"
+                    >
                       <FiTwitter />
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+
+                    <a
+                      href="https://www.linkedin.com/in/abdulahad-zarinc/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="LinkedIn"
+                      className="text-gray-600 hover:text-amber-600 transition-colors"
+                    >
                       <FiLinkedin />
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+
+                    <a
+                      href="https://github.com/AbdulAHAD968"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="GitHub"
+                      className="text-gray-600 hover:text-amber-600 transition-colors"
+                    >
                       <FiGithub />
                     </a>
-                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+
+                    <a
+                      href="mailto:ahad06074@gmail.com"
+                      aria-label="Email"
+                      className="text-gray-600 hover:text-amber-600 transition-colors"
+                    >
                       <FiMail />
+                    </a>
+
+                    <a
+                      href="https://www.reddit.com/user/Emotional_Studio4126/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Reddit"
+                      className="text-gray-600 hover:text-amber-600 transition-colors"
+                    >
+                      <FaReddit />
                     </a>
                   </div>
                 </div>

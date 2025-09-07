@@ -10,7 +10,7 @@ import { Bar, Line } from 'react-chartjs-2'
 import { FaHistory } from 'react-icons/fa'
 import { FiCopy, FiDollarSign, FiDownload, FiExternalLink, FiHome, FiPieChart, FiRefreshCw, FiTrendingUp } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
-import ConnectWallet from '../src/components/ConnectWallet'
+import ConnectWallet from '../src/components/ConnectWallet' // Import the ConnectWallet component
 import { ellipseAddress } from './utils/ellipseAddress'
 import { getAlgodConfigFromViteEnvironment, getIndexerConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
 

@@ -1,9 +1,13 @@
 import { useState } from 'react'
 
-const CostComparison = () => {
-  const [amount, setAmount] = useState(200)
-  const maxAmount = 1000
-  const minAmount = 10
+interface CostComparisonProps {
+  initialAmount?: number
+  maxAmount?: number
+  minAmount?: number
+}
+
+const CostComparison: React.FC<CostComparisonProps> = ({ initialAmount = 200, maxAmount = 1000, minAmount = 10 }) => {
+  const [amount, setAmount] = useState<number>(initialAmount)
 
   const westernUnionFee = 15 + amount * 0.02 // Flat $15 + 2% for realism
   const algoRemitFee = 0.001
@@ -14,72 +18,112 @@ const CostComparison = () => {
   const algoRemitReceived = (amount - algoRemitFee).toFixed(3)
   const savings = (westernUnionFee - algoRemitFee).toFixed(2)
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value)
+    setAmount(Math.min(maxAmount, Math.max(minAmount, value)))
+  }
+
   return (
-    <div className="backdrop-blur-lg bg-white/70 p-8 rounded-2xl border border-amber-100 shadow-lg transform transition-all duration-300 hover:shadow-xl cursor-pointer">
-      <h3 className="text-3xl font-semibold text-amber-800 mb-6">Cost Comparison Simulator</h3>
+    <div className="relative max-w-4xl mx-auto p-8 bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-amber-200/50 transition-all duration-500 hover:shadow-3xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/50 to-rose-50/50 rounded-2xl" />
+      <div className="relative z-10">
+        <h3 className="text-3xl font-bold text-amber-900 mb-8 tracking-tight">Cost Comparison Simulator</h3>
 
-      <div className="mb-6">
-        <label className="block text-amber-700 font-medium mb-2">Transfer Amount (USD): ${amount}</label>
-        <input
-          type="range"
-          min={minAmount}
-          max={maxAmount}
-          value={amount}
-          onChange={(e) => setAmount(Number(e.target.value))}
-          className="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-600"
-        />
-        <div className="flex justify-between text-sm text-amber-600 mt-1">
-          <span>${minAmount}</span>
-          <span>${maxAmount}</span>
+        <div className="mb-8">
+          <label className="block text-lg font-semibold text-amber-800 mb-3">Transfer Amount (USD)</label>
+          <div className="flex items-center gap-4">
+            <span className="text-amber-700 font-medium">$</span>
+            <input
+              type="number"
+              value={amount}
+              onChange={handleAmountChange}
+              className="w-full p-3 rounded-lg bg-amber-50/50 border border-amber-300 text-amber-900 focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300"
+              placeholder="Enter amount in USD"
+              min={minAmount}
+              max={maxAmount}
+            />
+          </div>
+          <input
+            type="range"
+            min={minAmount}
+            max={maxAmount}
+            value={amount}
+            onChange={handleAmountChange}
+            className="w-full h-2 bg-amber-200 rounded-lg cursor-pointer mt-4 accent-amber-600 transition-all duration-300"
+          />
+          <div className="flex justify-between text-sm text-amber-600 mt-2">
+            <span>${minAmount}</span>
+            <span>${maxAmount}</span>
+          </div>
         </div>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(Math.min(maxAmount, Math.max(minAmount, Number(e.target.value))))}
-          className="w-full mt-4 p-3 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 focus:border-amber-400 focus:outline-none"
-          placeholder="Enter amount in USD"
-        />
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="p-6 bg-rose-50 rounded-xl border border-rose-100">
-          <h4 className="text-xl font-semibold text-rose-800 mb-4">Western Union</h4>
-          <p className="text-rose-700 mb-2">Amount Received: ${westernUnionReceived}</p>
-          <p className="text-rose-700 mb-2">Fee: ${westernUnionFee.toFixed(2)}</p>
-          <p className="text-rose-700">Time: {westernUnionTime}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="p-6 bg-rose-50/80 rounded-xl border border-rose-200/50 shadow-md hover:shadow-lg transition-all duration-300">
+            <h4 className="text-xl font-semibold text-rose-900 mb-4">Western Union</h4>
+            <div className="space-y-3">
+              <p className="text-rose-800">
+                <span className="font-medium">Amount Received:</span> ${westernUnionReceived}
+              </p>
+              <p className="text-rose-800">
+                <span className="font-medium">Fee:</span> ${westernUnionFee.toFixed(2)}
+              </p>
+              <p className="text-rose-800">
+                <span className="font-medium">Time:</span> {westernUnionTime}
+              </p>
+            </div>
+          </div>
+          <div className="p-6 bg-amber-50/80 rounded-xl border border-amber-200/50 shadow-md hover:shadow-lg transition-all duration-300">
+            <h4 className="text-xl font-semibold text-amber-900 mb-4">AlgoRemit</h4>
+            <div className="space-y-3">
+              <p className="text-amber-800">
+                <span className="font-medium">Amount Received:</span> ${algoRemitReceived}
+              </p>
+              <p className="text-amber-800">
+                <span className="font-medium">Fee:</span> ${algoRemitFee.toFixed(3)}
+              </p>
+              <p className="text-amber-800">
+                <span className="font-medium">Time:</span> {algoRemitTime}
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="p-6 bg-amber-50 rounded-xl border border-amber-100">
-          <h4 className="text-xl font-semibold text-amber-800 mb-4">AlgoRemit</h4>
-          <p className="text-amber-700 mb-2">Amount Received: ${algoRemitReceived}</p>
-          <p className="text-amber-700 mb-2">Fee: ${algoRemitFee}</p>
-          <p className="text-amber-700">Time: {algoRemitTime}</p>
-        </div>
-      </div>
 
-      <div className="p-6 bg-gradient-to-r from-amber-100 to-rose-100 rounded-xl text-center">
-        <h4 className="text-xl font-semibold text-amber-800 mb-2">Your Savings with AlgoRemit</h4>
-        <p className="text-3xl font-bold text-rose-600">${savings}</p>
-        <p className="text-amber-700 mt-2">Instant settlement, zero intermediaries</p>
+        <div className="p-6 bg-gradient-to-r from-amber-100/80 to-rose-100/80 rounded-xl text-center shadow-md">
+          <h4 className="text-xl font-semibold text-amber-900 mb-3">Your Savings with AlgoRemit</h4>
+          <p className="text-4xl font-bold text-rose-600 tracking-tight">${savings}</p>
+          <p className="text-amber-800 mt-2 text-sm font-medium">Instant settlement, zero intermediaries</p>
+        </div>
       </div>
 
       <style>
         {`
           input[type='range']::-webkit-slider-thumb {
             appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #d97706; /* amber-600 */
+            width: 24px;
+            height: 24px;
+            background: #b45309; /* amber-700 */
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.2);
+            box-shadow: 0 0 0 6px rgba(180, 83, 9, 0.2);
+            transition: all 0.2s ease;
+          }
+          input[type='range']::-webkit-slider-thumb:hover {
+            box-shadow: 0 0 0 8px rgba(180, 83, 9, 0.3);
           }
           input[type='range']::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #d97706;
+            width: 24px;
+            height: 24px;
+            background: #b45309;
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.2);
+            box-shadow: 0 0 0 6px rgba(180, 83, 9, 0.2);
+            transition: all 0.2s ease;
+          }
+          input[type='range']::-moz-range-thumb:hover {
+            box-shadow: 0 0 0 8px rgba(180, 83, 9, 0.3);
+          }
+          .shadow-3xl {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
           }
         `}
       </style>
