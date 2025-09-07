@@ -88,7 +88,7 @@ const Home = () => {
               top: `${20 + i * 10}%`,
               left: `${i * 20}%`,
               filter: 'blur(40px)',
-              animationDelay: `${i * 2}s`,
+              animationDelay: `${i * 1}s`,
               animationDuration: `${20 + i * 4}s`,
             }}
           />
@@ -110,12 +110,13 @@ const Home = () => {
       </div>
 
       {/* Navbar */}
-      <header ref={navRef} className="fixed top-11 left-0 right-0 z-40 bg-white/90 backdrop-blur-md shadow-md">
+      <header ref={navRef} className="fixed top-12 left-0 right-0 z-40 bg-white/90 backdrop-blur-md shadow-md">
         <div className="px-6 py-4 flex items-center justify-between">
           <HashLink smooth to="/#home" className="text-3xl font-bold text-amber-600 flex items-center">
             <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">AlgoRemit</span>
             <span className="inline-block w-2 h-2 bg-amber-500 rounded-full ml-2 animate-pulse"></span>
           </HashLink>
+
           <nav className="hidden md:flex space-x-8">
             {['Home', 'Why AlgoRemit', 'Demo', 'Simulations', 'Account', 'Contact'].map((item, index) => (
               <HashLink
@@ -129,10 +130,12 @@ const Home = () => {
               </HashLink>
             ))}
           </nav>
+
           <button className="md:hidden text-gray-600 hover:text-amber-600 transition-colors" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
         </div>
+
         {isMenuOpen && (
           <nav className="md:hidden bg-white/95 px-6 py-4 flex flex-col space-y-4 shadow-lg rounded-b-2xl">
             {['Home', 'Why AlgoRemit', 'Demo', 'Simulations', 'Account', 'Contact'].map((item, index) => (

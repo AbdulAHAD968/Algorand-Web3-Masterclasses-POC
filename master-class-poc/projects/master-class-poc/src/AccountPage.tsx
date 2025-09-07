@@ -10,6 +10,7 @@ import { Bar, Line } from 'react-chartjs-2'
 import { FaHistory } from 'react-icons/fa'
 import { FiCopy, FiDollarSign, FiDownload, FiExternalLink, FiHome, FiPieChart, FiRefreshCw, FiTrendingUp } from 'react-icons/fi'
 import { useNavigate } from 'react-router-dom'
+import ConnectWallet from '../src/components/ConnectWallet'
 import { ellipseAddress } from './utils/ellipseAddress'
 import { getAlgodConfigFromViteEnvironment, getIndexerConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
 
@@ -82,8 +83,6 @@ interface AlgorandTransaction {
   sender: string
 }
 
-// (Removed unused local response interfaces; using in-place typings where needed)
-
 const AccountPage = () => {
   const { activeAddress } = useWallet()
   const { enqueueSnackbar } = useSnackbar()
@@ -110,6 +109,7 @@ const AccountPage = () => {
   const [chartType, setChartType] = useState<'line' | 'bar'>('line')
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   const [exporting, setExporting] = useState<boolean>(false)
+  const [showConnectWallet, setShowConnectWallet] = useState<boolean>(false) // State for ConnectWallet modal
 
   const networkName = useMemo(() => {
     return algoConfig.network === '' ? 'LocalNet' : algoConfig.network.charAt(0).toUpperCase() + algoConfig.network.slice(1).toLowerCase()
@@ -335,7 +335,9 @@ const AccountPage = () => {
   }
 
   const viewFullHistory = () => {
-    window.open(`https://testnet.algoexplorer.io/address/${activeAddress}`, '_blank')
+    if (activeAddress) {
+      window.open(`https://testnet.algoexplorer.io/address/${activeAddress}`, '_blank')
+    }
   }
 
   // Chart data for transactions over time (line chart)
@@ -409,25 +411,34 @@ const AccountPage = () => {
     },
   }
 
+  // If user is not logged in, show the ConnectWallet component
   if (!activeAddress) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 flex items-center justify-center">
         <div className="text-center p-8 bg-white/80 backdrop-blur-lg rounded-2xl border border-amber-100 shadow-lg">
-          <h2 className="text-2xl font-semibold text-amber-800 mb-4">No Wallet Connected</h2>
+          <h2 className="text-2xl font-semibold text-amber-800 mb-4">Connect Your Wallet</h2>
           <p className="text-amber-600 mb-6">Please connect your wallet to view account details.</p>
           <button
-            onClick={goToHome}
+            onClick={() => setShowConnectWallet(true)}
             className="px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors flex items-center justify-center mx-auto"
+          >
+            Connect Wallet
+          </button>
+          <button
+            onClick={goToHome}
+            className="mt-4 px-6 py-3 bg-white text-amber-700 rounded-lg border border-amber-200 hover:bg-amber-50 transition-colors flex items-center justify-center mx-auto"
           >
             <FiHome className="mr-2" /> Go to Home
           </button>
         </div>
+        <ConnectWallet open={showConnectWallet} setOpen={setShowConnectWallet} />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-green-50 py-8 px-4 sm:px-6 lg:px-8">
+      <ConnectWallet open={showConnectWallet} setOpen={setShowConnectWallet} />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
