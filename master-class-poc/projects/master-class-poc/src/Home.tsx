@@ -89,7 +89,7 @@ const Home = () => {
               left: `${i * 20}%`,
               filter: 'blur(40px)',
               animationDelay: `${i * 1}s`,
-              animationDuration: `${20 + i * 4}s`,
+              animationDuration: `${60 + i * 5}s`,
             }}
           />
         ))}
@@ -97,7 +97,7 @@ const Home = () => {
 
       {/* News Banner */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-600 to-rose-600 text-white py-3 overflow-hidden shadow-md">
-        <div className="animate-marquee whitespace-nowrap text-lg font-semibold">
+        <div className="animate-marquee whitespace-nowrap text-lg font-bold">
           <span className="mx-4">AlgoRemit: Redefining Global Payments with Speed and Savings</span>
           <span className="mx-4">Powered by Algorand Blockchain</span>
           <span className="mx-4">Secure, Transparent, and Scalable</span>
