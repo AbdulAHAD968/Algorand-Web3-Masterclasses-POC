@@ -1,15 +1,15 @@
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import { useWallet } from '@txnlab/use-wallet-react'
 import { useSnackbar } from 'notistack'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { getAlgodConfigFromViteEnvironment } from '../utils/network/getAlgoClientConfigs'
 
-interface TokenMintInterface {
-  openModal: boolean
-  setModalState: (value: boolean) => void
+interface TokenMintProps {
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const Tokenmint = ({ openModal, setModalState }: TokenMintInterface) => {
+const Tokenmint = ({ open, setOpen }: TokenMintProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [assetName, setAssetName] = useState<string>('')
   const [unitName, setUnitName] = useState<string>('')
@@ -40,8 +40,8 @@ const Tokenmint = ({ openModal, setModalState }: TokenMintInterface) => {
     try {
       enqueueSnackbar('Creating token on TestNet...', { variant: 'info' })
 
-      const onChainTotal = BigInt(totalSupply) // ASA total supply
-      const decimalsBig = BigInt(decimals) // Number of decimals allowed
+      const onChainTotal = BigInt(totalSupply)
+      const decimalsBig = BigInt(decimals)
 
       const createResult = await algorand.send.assetCreate({
         sender: activeAddress,
@@ -61,20 +61,19 @@ const Tokenmint = ({ openModal, setModalState }: TokenMintInterface) => {
       setTotalSupply('')
       setDecimals('0')
     } catch (e) {
-      console.error(e)
       enqueueSnackbar('Failed to mint token', { variant: 'error' })
     }
 
     setLoading(false)
   }
 
+  if (!open) return null
+
   return (
-    <dialog id="tokenmint_modal" className={`modal ${openModal ? 'modal-open' : ''} bg-slate-200`}>
-      <form method="dialog" className="modal-box">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+      <div className="bg-white text-black p-6 rounded-xl shadow-xl w-full max-w-lg">
         <h3 className="font-bold text-lg">Mint a Fungible Token (ASA)</h3>
-        <p className="text-sm text-gray-500 mb-4">
-          Enter details to create your token on Algorand TestNet.
-        </p>
+        <p className="text-sm text-gray-500 mb-4">Enter details to create your token on Algorand TestNet.</p>
 
         <input
           type="text"
@@ -105,20 +104,16 @@ const Tokenmint = ({ openModal, setModalState }: TokenMintInterface) => {
           onChange={(e) => setDecimals(e.target.value)}
         />
 
-        <div className="modal-action">
-          <button className="btn" onClick={() => setModalState(!openModal)}>
+        <div className="flex justify-end gap-3 mt-6">
+          <button className="btn" onClick={() => setOpen(false)}>
             Close
           </button>
-          <button
-            className={`btn ${assetName && unitName && totalSupply ? '' : 'btn-disabled'}`}
-            onClick={handleMintToken}
-            type="button"
-          >
+          <button className={`btn ${assetName && unitName && totalSupply ? '' : 'btn-disabled'}`} onClick={handleMintToken} type="button">
             {loading ? <span className="loading loading-spinner" /> : 'Mint Token'}
           </button>
         </div>
-      </form>
-    </dialog>
+      </div>
+    </div>
   )
 }
 

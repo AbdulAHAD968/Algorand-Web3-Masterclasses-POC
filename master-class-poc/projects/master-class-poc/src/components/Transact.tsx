@@ -1,15 +1,15 @@
 import { algo, AlgorandClient } from '@algorandfoundation/algokit-utils'
 import { useWallet } from '@txnlab/use-wallet-react'
 import { useSnackbar } from 'notistack'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { getAlgodConfigFromViteEnvironment } from '../utils/network/getAlgoClientConfigs'
 
-interface TransactInterface {
-  openModal: boolean
-  setModalState: (value: boolean) => void
+interface TransactProps {
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const Transact = ({ openModal, setModalState }: TransactInterface) => {
+const Transact = ({ open, setOpen }: TransactProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [receiverAddress, setReceiverAddress] = useState<string>('')
 
@@ -17,14 +17,15 @@ const Transact = ({ openModal, setModalState }: TransactInterface) => {
   const algorand = AlgorandClient.fromConfig({ algodConfig })
 
   const { enqueueSnackbar } = useSnackbar()
-
   const { transactionSigner, activeAddress } = useWallet()
 
-  const handleSubmitAlgo = async () => {
+  const handleSubmitAlgo = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     setLoading(true)
 
     if (!transactionSigner || !activeAddress) {
       enqueueSnackbar('Please connect wallet first', { variant: 'warning' })
+      setLoading(false)
       return
     }
 
@@ -38,6 +39,7 @@ const Transact = ({ openModal, setModalState }: TransactInterface) => {
       })
       enqueueSnackbar(`Transaction sent: ${result.txIds[0]}`, { variant: 'success' })
       setReceiverAddress('')
+      setOpen(false)
     } catch (e) {
       enqueueSnackbar('Failed to send transaction', { variant: 'error' })
     }
@@ -45,35 +47,38 @@ const Transact = ({ openModal, setModalState }: TransactInterface) => {
     setLoading(false)
   }
 
+  if (!open) return null
+
   return (
-    <dialog id="transact_modal" className={`modal ${openModal ? 'modal-open' : ''} bg-slate-200`}>
-      <form method="dialog" className="modal-box">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+      <div className="bg-white text-black p-6 rounded-xl shadow-xl w-full max-w-md">
         <h3 className="font-bold text-lg">Send payment transaction</h3>
-        <br />
-        <input
-          type="text"
-          data-test-id="receiver-address"
-          placeholder="Provide wallet address"
-          className="input input-bordered w-full"
-          value={receiverAddress}
-          onChange={(e) => {
-            setReceiverAddress(e.target.value)
-          }}
-        />
-        <div className="modal-action ">
-          <button className="btn" onClick={() => setModalState(!openModal)}>
+        <div className="mt-4">
+          <input
+            type="text"
+            data-test-id="receiver-address"
+            placeholder="Provide wallet address"
+            className="input input-bordered w-full"
+            value={receiverAddress}
+            onChange={(e) => setReceiverAddress(e.target.value)}
+          />
+        </div>
+        <div className="flex justify-end gap-4 mt-6">
+          <button type="button" className="btn" onClick={() => setOpen(false)}>
             Close
           </button>
           <button
+            type="button"
             data-test-id="send-algo"
-            className={`btn ${receiverAddress.length === 58 ? '' : 'btn-disabled'} lo`}
+            className={`btn ${receiverAddress.length === 58 ? '' : 'btn-disabled'}`}
             onClick={handleSubmitAlgo}
+            disabled={loading || receiverAddress.length !== 58}
           >
             {loading ? <span className="loading loading-spinner" /> : 'Send 1 Algo'}
           </button>
         </div>
-      </form>
-    </dialog>
+      </div>
+    </div>
   )
 }
 

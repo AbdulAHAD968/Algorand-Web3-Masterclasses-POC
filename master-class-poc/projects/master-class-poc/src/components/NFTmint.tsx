@@ -2,15 +2,15 @@ import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 import { useWallet } from '@txnlab/use-wallet-react'
 import { sha512_256 } from 'js-sha512'
 import { useSnackbar } from 'notistack'
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { getAlgodConfigFromViteEnvironment } from '../utils/network/getAlgoClientConfigs'
 
-interface NFTMintInterface {
-  openModal: boolean
-  setModalState: (value: boolean) => void
+interface NFTMintProps {
+  open: boolean
+  setOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const NFTmint = ({ openModal, setModalState }: NFTMintInterface) => {
+const NFTmint = ({ open, setOpen }: NFTMintProps) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [metadataUrl, setMetadataUrl] = useState<string>('')
 
@@ -60,13 +60,14 @@ const NFTmint = ({ openModal, setModalState }: NFTMintInterface) => {
     setLoading(false)
   }
 
+  if (!open) return null
+
   return (
-    <dialog id="nftmint_modal" className={`modal ${openModal ? 'modal-open' : ''} bg-slate-200`}>
-      <form method="dialog" className="modal-box">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+      <div className="bg-white text-black p-6 rounded-xl shadow-xl w-full max-w-lg">
         <h3 className="font-bold text-lg">Mint Your MasterPass NFT</h3>
-        <p className="text-sm text-gray-500 mb-4">
-          Paste the metadata URL from Pinata (IPFS link)
-        </p>
+        <p className="text-sm text-gray-500 mb-4">Paste the metadata URL from Pinata (IPFS link)</p>
+
         <input
           type="text"
           placeholder="ipfs:// or https://..."
@@ -74,20 +75,17 @@ const NFTmint = ({ openModal, setModalState }: NFTMintInterface) => {
           value={metadataUrl}
           onChange={(e) => setMetadataUrl(e.target.value)}
         />
-        <div className="modal-action">
-          <button className="btn" onClick={() => setModalState(!openModal)}>
+
+        <div className="flex justify-end gap-3 mt-6">
+          <button className="btn" onClick={() => setOpen(false)}>
             Close
           </button>
-          <button
-            className={`btn ${metadataUrl.length > 0 ? '' : 'btn-disabled'}`}
-            onClick={handleMintNFT}
-            type="button"
-          >
+          <button className={`btn ${metadataUrl.length > 0 ? '' : 'btn-disabled'}`} onClick={handleMintNFT} type="button">
             {loading ? <span className="loading loading-spinner" /> : 'Mint NFT'}
           </button>
         </div>
-      </form>
-    </dialog>
+      </div>
+    </div>
   )
 }
 
