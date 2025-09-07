@@ -1,381 +1,204 @@
-import { useWallet } from '@txnlab/use-wallet-react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { TextPlugin } from 'gsap/TextPlugin'
 import { useEffect, useRef, useState } from 'react'
-import ConnectWallet from './components/ConnectWallet'
+import { FaRocket } from 'react-icons/fa'
+import { FiAlertCircle, FiClock, FiDollarSign, FiGithub, FiLinkedin, FiMail, FiMenu, FiTwitter, FiUsers, FiX } from 'react-icons/fi'
+import { SiAlgorand, SiCashapp, SiMastercard, SiPaypal, SiVisa, SiWesternunion } from 'react-icons/si'
+import { HashLink } from 'react-router-hash-link'
 import CostComparison from './components/CostComparison'
 import ImpactChart from './components/ImpactChart'
 import MarketExpansion from './components/MarketExpansion'
-import NFTmint from './components/NFTmint'
-import Tokenmint from './components/Tokenmint'
-import Transact from './components/Transact'
-
-// Icons (using react-icons)
-import {
-  FiAlertCircle,
-  FiRocket,
-  FiUsers,
-  FiDollarSign,
-  FiClock,
-  FiSend,
-  FiLayers,
-  FiBox,
-  FiMail,
-  FiMenu,
-  FiX
-} from 'react-icons/fi'
-import { SiAlgorand } from 'react-icons/si'
-
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger, TextPlugin)
 
 const Home = () => {
-  const { activeAddress } = useWallet()
-  const [openWalletModal, setOpenWalletModal] = useState(false)
-  const [openTransactModal, setOpenTransactModal] = useState(false)
-  const [openNFTmintModal, setOpenNFTmintModal] = useState(false)
-  const [openTokenModal, setOpenTokenModal] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const heroRef = useRef(null)
-  const heroTitleRef = useRef(null)
-  const heroSubtitleRef = useRef(null)
-  const heroButtonRef = useRef(null)
-  const heroOrbsRef = useRef([])
-  const statsRef = useRef(null)
-  const problemSolutionRef = useRef(null)
-  const demoRef = useRef(null)
-  const simulationsRef = useRef(null)
-  const footerRef = useRef(null)
+  const heroRef = useRef<HTMLDivElement>(null)
+  const heroTitleRef = useRef<HTMLHeadingElement>(null)
+  const heroSubtitleRef = useRef<HTMLParagraphElement>(null)
+  const heroButtonRef = useRef<HTMLAnchorElement>(null)
+  const heroOrbsRef = useRef<HTMLDivElement[]>([])
+  const statsRef = useRef<HTMLDivElement>(null)
+  const problemSolutionRef = useRef<HTMLDivElement>(null)
+  const demoRef = useRef<HTMLDivElement>(null)
+  const simulationsRef = useRef<HTMLDivElement>(null)
+  const footerRef = useRef<HTMLDivElement>(null)
 
-  // Create refs for animated elements
-  const navRef = useRef(null)
-  const statItemsRef = useRef([])
-  const problemCardRef = useRef(null)
-  const solutionCardRef = useRef(null)
-  const demoCardRef = useRef(null)
-  const simulationCardsRef = useRef([])
+  const navRef = useRef<HTMLElement>(null)
+  const statItemsRef = useRef<HTMLDivElement[]>([])
+  const problemCardRef = useRef<HTMLDivElement>(null)
+  const solutionCardRef = useRef<HTMLDivElement>(null)
+  const demoCardRef = useRef<HTMLDivElement>(null)
+  const simulationCardsRef = useRef<HTMLDivElement[]>([])
 
-  // Add ref to array function
-  const addToRefs = (el) => {
+  const addToRefs = (el: HTMLDivElement | null) => {
     if (el && !statItemsRef.current.includes(el)) {
       statItemsRef.current.push(el)
     }
   }
 
-  const addSimulationRef = (el) => {
+  const addSimulationRef = (el: HTMLDivElement | null) => {
     if (el && !simulationCardsRef.current.includes(el)) {
       simulationCardsRef.current.push(el)
     }
   }
 
-  const addOrbRef = (el) => {
+  const addOrbRef = (el: HTMLDivElement | null) => {
     if (el && !heroOrbsRef.current.includes(el)) {
       heroOrbsRef.current.push(el)
     }
   }
 
   useEffect(() => {
-    // Hero section animations
-    const heroTl = gsap.timeline()
-
-    // Animate orbs in background
-    heroOrbsRef.current.forEach((orb, i) => {
-      gsap.to(orb, {
-        duration: 20 + i * 4,
-        x: i % 2 === 0 ? '+=150' : '-=150',
-        y: i % 2 === 0 ? '-=100' : '+=100',
-        rotation: i % 2 === 0 ? '+=360' : '-=360',
-        ease: 'sine.inOut',
-        repeat: -1,
-        yoyo: true,
-      })
-    })
-
-    // Main hero animation sequence
-    heroTl
-      .fromTo(navRef.current, { y: -100, opacity: 0 }, {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        ease: 'power3.out'
-      })
-      .fromTo(heroTitleRef.current, { opacity: 0, y: 80 }, {
-        opacity: 1,
-        y: 0,
-        duration: 1.5,
-        ease: 'expo.out'
-      }, '-=0.5')
-      .to(heroTitleRef.current, {
-        duration: 2.5,
-        text: {
-          value: 'RemitX',
-          delimiter: '',
-        },
-        ease: 'power2.inOut',
-      })
-      .fromTo(heroSubtitleRef.current, { opacity: 0, y: 40 }, {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: 'power3.out'
-      }, '-=1.8')
-      .fromTo(heroButtonRef.current, { opacity: 0, scale: 0.8 }, {
-        opacity: 1,
-        scale: 1,
-        duration: 1,
-        ease: 'back.out(1.7)'
-      }, '-=0.7')
-
-    // Stats section animation
-    gsap.fromTo(
-      statItemsRef.current,
-      { opacity: 0, y: 60, scale: 0.8 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: 'back.out(1.7)',
-        scrollTrigger: {
-          trigger: statsRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
-        },
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fadeInUp')
+          }
+        })
       },
+      { threshold: 0.1 },
     )
 
-    // Problem/Solution section animation
-    const problemSolutionTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: problemSolutionRef.current,
-        start: 'top 80%',
-        toggleActions: 'play none none reverse',
-      },
-    })
+    if (navRef.current) observer.observe(navRef.current)
+    if (heroTitleRef.current) observer.observe(heroTitleRef.current)
+    if (heroSubtitleRef.current) observer.observe(heroSubtitleRef.current)
+    if (heroButtonRef.current) observer.observe(heroButtonRef.current)
+    statItemsRef.current.forEach((item) => observer.observe(item))
+    if (problemCardRef.current) observer.observe(problemCardRef.current)
+    if (solutionCardRef.current) observer.observe(solutionCardRef.current)
+    if (demoCardRef.current) observer.observe(demoCardRef.current)
+    simulationCardsRef.current.forEach((card) => observer.observe(card))
+    if (footerRef.current) observer.observe(footerRef.current)
 
-    problemSolutionTl
-      .fromTo(
-        problemCardRef.current,
-        { x: -100, opacity: 0, rotationY: -15 },
-        {
-          x: 0,
-          opacity: 1,
-          rotationY: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          onComplete: function() {
-            gsap.to(problemCardRef.current, {
-              y: -10,
-              duration: 2,
-              repeat: -1,
-              yoyo: true,
-              ease: 'sine.inOut'
-            })
-          }
-        },
-      )
-      .fromTo(
-        solutionCardRef.current,
-        { x: 100, opacity: 0, rotationY: 15 },
-        {
-          x: 0,
-          opacity: 1,
-          rotationY: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-          onComplete: function() {
-            gsap.to(solutionCardRef.current, {
-              y: -10,
-              duration: 2,
-              repeat: -1,
-              yoyo: true,
-              ease: 'sine.inOut',
-              delay: 0.5
-            })
-          }
-        },
-        '-=0.8',
-      )
-
-    // Demo section animation
-    gsap.fromTo(
-      demoCardRef.current,
-      { opacity: 0, y: 80 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: demoRef.current,
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
-        },
-        onComplete: function() {
-          gsap.to(demoCardRef.current, {
-            y: -5,
-            duration: 2,
-            repeat: -1,
-            yoyo: true,
-            ease: 'sine.inOut'
-          })
-        }
-      },
-    )
-
-    // Simulations section animation
-    simulationCardsRef.current.forEach((card, i) => {
-      gsap.fromTo(
-        card,
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          delay: i * 0.3,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: simulationsRef.current,
-            start: 'top 70%',
-            toggleActions: 'play none none reverse',
-          },
-          onComplete: function() {
-            gsap.to(card, {
-              y: -5,
-              duration: 2,
-              repeat: -1,
-              yoyo: true,
-              ease: 'sine.inOut',
-              delay: i * 0.2
-            })
-          }
-        },
-      )
-    })
-
-    // Footer animation
-    gsap.fromTo(
-      footerRef.current,
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        scrollTrigger: {
-          trigger: footerRef.current,
-          start: 'top 90%',
-          toggleActions: 'play none none reverse',
-        },
-      },
-    )
-
-    // Clean up function
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
-    }
+    return () => observer.disconnect()
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 text-gray-800 font-sans overflow-hidden cursor-default">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 text-gray-800 font-sans overflow-hidden cursor-default">
       {/* Animated Background Orbs */}
       <div className="fixed inset-0 pointer-events-none">
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
             ref={addOrbRef}
-            className="absolute rounded-full opacity-30"
+            className="absolute rounded-full opacity-30 animate-orbFloat"
             style={{
               width: `${100 + i * 50}px`,
               height: `${100 + i * 50}px`,
-              background: `radial-gradient(circle, ${i % 2 === 0 ? 'rgba(96, 165, 250, 0.3)' : 'rgba(139, 92, 246, 0.3)'})`,
+              background: `radial-gradient(circle, ${i % 2 === 0 ? 'rgba(255, 218, 193, 0.3)' : 'rgba(111, 78, 55, 0.3)'})`,
               top: `${20 + i * 10}%`,
               left: `${i * 20}%`,
               filter: 'blur(40px)',
+              animationDelay: `${i * 2}s`,
+              animationDuration: `${20 + i * 4}s`,
             }}
           />
         ))}
       </div>
 
+      {/* News Banner */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-600 to-rose-600 text-white py-3 overflow-hidden shadow-md">
+        <div className="animate-marquee whitespace-nowrap text-lg font-semibold">
+          <span className="mx-4">AlgoRemit: Redefining Global Payments with Speed and Savings</span>
+          <span className="mx-4">Powered by Algorand Blockchain</span>
+          <span className="mx-4">Secure, Transparent, and Scalable</span>
+          <span className="mx-4">Join the Future of Remittances</span>
+          <span className="mx-4">AlgoRemit: Redefining Global Payments with Speed and Savings</span>
+          <span className="mx-4">Powered by Algorand Blockchain</span>
+          <span className="mx-4">Secure, Transparent, and Scalable</span>
+          <span className="mx-4">Join the Future of Remittances</span>
+        </div>
+      </div>
+
       {/* Navbar */}
-      <header ref={navRef} className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <a href="/" className="text-3xl font-bold text-indigo-600 flex items-center">
-            <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">RemitX</span>
-            <span className="inline-block w-2 h-2 bg-green-500 rounded-full ml-2 animate-pulse"></span>
-          </a>
+      <header ref={navRef} className="fixed top-11 left-0 right-0 z-40 bg-white/90 backdrop-blur-md shadow-md">
+        <div className="px-6 py-4 flex items-center justify-between">
+          <HashLink smooth to="/#home" className="text-3xl font-bold text-amber-600 flex items-center">
+            <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">AlgoRemit</span>
+            <span className="inline-block w-2 h-2 bg-amber-500 rounded-full ml-2 animate-pulse"></span>
+          </HashLink>
           <nav className="hidden md:flex space-x-8">
-            {['Home', 'Why RemitX', 'Demo', 'Simulations', 'Contact'].map((item, index) => (
-              <a
+            {['Home', 'Why AlgoRemit', 'Demo', 'Simulations', 'Account', 'Contact'].map((item, index) => (
+              <HashLink
                 key={index}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className="text-gray-600 hover:text-indigo-600 transition-colors relative group font-medium"
+                smooth
+                to={item === 'Account' ? '/account' : `/#${item.toLowerCase().replace(' ', '-')}`}
+                className="text-gray-600 hover:text-amber-600 transition-colors relative group font-medium"
               >
                 {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-500 transition-all group-hover:w-full"></span>
-              </a>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all group-hover:w-full"></span>
+              </HashLink>
             ))}
           </nav>
-          <button
-            className="md:hidden text-gray-600 hover:text-indigo-600 transition-colors"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
+          <button className="md:hidden text-gray-600 hover:text-amber-600 transition-colors" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
         </div>
         {isMenuOpen && (
-          <nav className="md:hidden bg-white/95 px-6 py-4 flex flex-col space-y-4 shadow-lg">
-            {['Home', 'Why RemitX', 'Demo', 'Simulations', 'Contact'].map((item, index) => (
-              <a
+          <nav className="md:hidden bg-white/95 px-6 py-4 flex flex-col space-y-4 shadow-lg rounded-b-2xl">
+            {['Home', 'Why AlgoRemit', 'Demo', 'Simulations', 'Account', 'Contact'].map((item, index) => (
+              <HashLink
                 key={index}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className="text-gray-600 hover:text-indigo-600 transition-colors py-2 font-medium"
+                smooth
+                to={item === 'Account' ? '/account' : `/#${item.toLowerCase().replace(' ', '-')}`}
+                className="text-gray-600 hover:text-amber-600 transition-colors py-2 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item}
-              </a>
+              </HashLink>
             ))}
           </nav>
         )}
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="relative pt-24 pb-20 px-6 flex items-center justify-center overflow-hidden min-h-screen">
+      <section id="home" className="relative pt-32 pb-20 px-6 flex items-center justify-center overflow-hidden min-h-screen">
         <div ref={heroRef} className="relative z-10 text-center max-w-5xl mx-auto">
           <h1
             ref={heroTitleRef}
-            className="text-6xl md:text-8xl font-extrabold mb-6 tracking-tighter bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-6 tracking-tight bg-gradient-to-r from-amber-600 via-rose-600 to-amber-700 bg-clip-text text-transparent opacity-0"
           >
-            Revolutionizing Remittances
+            Send Money Globally, Instantly
           </h1>
-          <p ref={heroSubtitleRef} className="text-xl md:text-2xl text-gray-600 mb-10 font-medium leading-relaxed max-w-3xl mx-auto">
-            Instant cross-border payments powered by Algorand and USDCa with near-zero fees and lightning-fast settlement
-          </p>
-          <button
-            ref={heroButtonRef}
-            className="px-10 py-4 rounded-full font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-indigo-400/30 relative overflow-hidden group cursor-pointer"
-            onClick={() => setOpenWalletModal(true)}
+          <p
+            ref={heroSubtitleRef}
+            className="text-xl md:text-2xl text-gray-600 mb-10 font-medium leading-relaxed max-w-3xl mx-auto opacity-0"
           >
-            <span className="relative z-10 flex items-center justify-center">
-              Launch Demo <FiRocket className="ml-2" />
-            </span>
-            <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-          </button>
+            Powered by Algorand and USDCa, AlgoRemit delivers secure, near-zero fee transfers in seconds, connecting you to loved ones
+            worldwide.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <HashLink
+              smooth
+              to="/account"
+              ref={heroButtonRef}
+              className="px-8 py-4 rounded-full font-bold bg-gradient-to-r from-amber-600 to-rose-700 text-white hover:from-amber-700 hover:to-rose-800 transition-all duration-300 shadow-lg hover:shadow-amber-400/30 relative overflow-hidden group cursor-pointer opacity-0 text-lg inline-flex items-center justify-center"
+            >
+              <span className="relative z-10 flex items-center">
+                Explore Your Account <FaRocket className="ml-2" />
+              </span>
+              <span className="absolute inset-0 bg-gradient-to-r from-amber-700 to-rose-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </HashLink>
+            <HashLink
+              smooth
+              to="/#demo"
+              className="px-8 py-4 rounded-full font-bold bg-white text-amber-600 border-2 border-amber-600 hover:bg-amber-50 transition-all duration-300 shadow-lg hover:shadow-amber-400/20 relative overflow-hidden group cursor-pointer text-lg inline-flex items-center justify-center"
+            >
+              <span className="relative z-10 flex items-center">Watch Demo</span>
+            </HashLink>
+          </div>
         </div>
 
-        {/* Animated particles */}
+        {/* Animated Particles */}
         <div className="absolute inset-0 pointer-events-none">
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-2 h-2 rounded-full bg-indigo-400/40"
+              className="absolute w-2 h-2 rounded-full bg-amber-400/40 animate-particleFloat"
               style={{
                 top: `${Math.random() * 100}%`,
                 left: `${Math.random() * 100}%`,
-                animation: `float${(i % 3) + 1} ${8 + Math.random() * 10}s infinite ease-in-out`,
                 animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${8 + Math.random() * 10}s`,
               }}
             />
           ))}
@@ -383,20 +206,20 @@ const Home = () => {
       </section>
 
       {/* Stats Section */}
-      <section ref={statsRef} className="py-20 px-6 bg-gradient-to-r from-indigo-100/80 to-purple-100/80 relative">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+      <section ref={statsRef} className="py-20 px-6 bg-gradient-to-r from-amber-100/80 to-rose-100/80 relative">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 text-center">
           {[
             { value: '500+', label: 'Users Served', icon: <FiUsers size={32} /> },
-            { value: '$0.001', label: 'Avg. Fee (vs $20 Western Union)', icon: <FiDollarSign size={32} /> },
-            { value: '4 sec', label: 'Settlement Time (vs 3 days)', icon: <FiClock size={32} /> },
+            { value: '$0.001', label: 'Avg. Fee (vs $20+ Traditional)', icon: <FiDollarSign size={32} /> },
+            { value: '4 sec', label: 'Settlement Time (vs 3-5 days)', icon: <FiClock size={32} /> },
           ].map((stat, index) => (
             <div
               key={index}
               ref={addToRefs}
-              className="backdrop-blur-lg bg-white/70 p-8 rounded-2xl border border-indigo-100 shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
+              className="backdrop-blur-lg bg-white/70 p-8 rounded-2xl border border-amber-100 shadow-lg transform transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer opacity-0"
             >
-              <div className="text-indigo-500 mb-4 flex justify-center">{stat.icon}</div>
-              <h3 className="text-4xl font-bold text-indigo-700 mb-2">{stat.value}</h3>
+              <div className="text-amber-600 mb-4 flex justify-center">{stat.icon}</div>
+              <h3 className="text-4xl font-bold text-amber-700 mb-2">{stat.value}</h3>
               <p className="text-gray-600 text-lg">{stat.label}</p>
             </div>
           ))}
@@ -404,41 +227,41 @@ const Home = () => {
       </section>
 
       {/* Problem-Solution Section */}
-      <section id="why-remitx" ref={problemSolutionRef} className="py-20 px-6">
+      <section id="why-algoremit" ref={problemSolutionRef} className="py-20 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-5xl font-bold text-gray-800 mb-16 tracking-tight">
-            Why <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">RemitX</span>?
+            Why Choose <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">AlgoRemit</span>?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             <div
               ref={problemCardRef}
-              className="backdrop-blur-lg bg-white/70 p-8 rounded-2xl border border-rose-100 shadow-lg transform transition-all duration-300 hover:shadow-xl cursor-pointer"
+              className="backdrop-blur-lg bg-white/70 p-8 rounded-2xl border border-rose-100 shadow-lg transform transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer opacity-0"
             >
               <div className="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mb-6 mx-auto">
                 <FiAlertCircle className="text-rose-500" size={28} />
               </div>
-              <h3 className="text-3xl font-semibold text-gray-800 mb-6">The Problem</h3>
+              <h3 className="text-3xl font-semibold text-gray-800 mb-6">The Challenge</h3>
               <p className="text-gray-600 text-lg leading-relaxed">
-                Traditional remittances are slow (3-5 days), costly ($15-$30 fees), and rely on multiple intermediaries, reducing trust,
-                transparency, and efficiency for migrants sending money home.
+                Traditional remittances are plagued by high fees ($15-$30), slow processing (3-5 days), and multiple intermediaries, eroding
+                trust and efficiency for migrant workers sending money home.
               </p>
             </div>
             <div
               ref={solutionCardRef}
-              className="backdrop-blur-lg bg-white/70 p-8 rounded-2xl border border-green-100 shadow-lg transform transition-all duration-300 hover:shadow-xl cursor-pointer"
+              className="backdrop-blur-lg bg-white/70 p-8 rounded-2xl border border-amber-100 shadow-lg transform transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer opacity-0"
             >
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6 mx-auto">
-                <FiRocket className="text-green-500" size={28} />
+              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                <FaRocket className="text-amber-600" size={28} />
               </div>
-              <h3 className="text-3xl font-semibold text-gray-800 mb-6">Our Solution</h3>
+              <h3 className="text-3xl font-semibold text-gray-800 mb-6">Our Breakthrough</h3>
               <p className="text-gray-600 text-lg leading-relaxed">
-                RemitX leverages Algorand and USDCa for near-instant transfers (4 seconds) with fees as low as $0.001, ensuring secure,
-                transparent, and scalable transactions directly between users.
+                AlgoRemit harnesses Algorand and USDCa for instant transfers (4 seconds) with fees as low as $0.001, delivering secure,
+                transparent, and scalable solutions directly to users worldwide.
               </p>
             </div>
           </div>
           <p className="text-gray-700 mt-12 text-xl font-medium flex items-center justify-center">
-            Powered by <SiAlgorand className="text-black mx-2" size={24} />, scalable to millions of transactions with carbon-neutral technology.
+            Powered by <SiAlgorand className="text-black mx-2" size={24} />, scaling to billions with carbon-neutral technology.
           </p>
         </div>
       </section>
@@ -447,99 +270,153 @@ const Home = () => {
       <section id="demo" ref={demoRef} className="py-20 px-6 flex items-center justify-center">
         <div
           ref={demoCardRef}
-          className="relative z-10 backdrop-blur-lg bg-white/80 p-10 rounded-3xl shadow-xl w-full max-w-4xl mx-4 text-center border border-indigo-100 cursor-pointer"
+          className="relative z-10 backdrop-blur-lg bg-white/80 p-10 rounded-3xl shadow-xl w-full max-w-4xl mx-4 text-center border border-amber-100 cursor-pointer opacity-0"
         >
           <h2 className="text-4xl font-bold text-gray-800 mb-8 tracking-tight">
-            Try the <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Interactive Demo</span>
+            Experience the{' '}
+            <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">AlgoRemit Advantage</span>
           </h2>
           <p className="text-gray-600 mb-8 text-lg max-w-2xl mx-auto">
-            Experience firsthand how RemitX transforms cross-border payments with blockchain technology
+            Test-drive our blockchain-powered platform and see how AlgoRemit redefines cross-border payments.
           </p>
-          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-6 justify-center">
-            <button
-              className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-110 shadow-lg relative overflow-hidden group cursor-pointer flex items-center"
-              onClick={() => setOpenWalletModal(true)}
-            >
-              <span className="relative z-10 flex items-center">
-                {activeAddress ? 'Wallet Connected ✅' : 'Connect Wallet'}
-                {!activeAddress && <FiSend className="ml-2" />}
-              </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-            </button>
-            {activeAddress && (
-              <>
-                <button
-                  className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-110 shadow-lg relative overflow-hidden group cursor-pointer flex items-center"
-                  onClick={() => setOpenTransactModal(true)}
-                >
-                  <span className="relative z-10 flex items-center">
-                    Send 1 USDCa Payment <FiSend className="ml-2" />
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                </button>
-                <button
-                  className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-110 shadow-lg relative overflow-hidden group cursor-pointer flex items-center"
-                  onClick={() => setOpenNFTmintModal(true)}
-                >
-                  <span className="relative z-10 flex items-center">
-                    Mint MasterPass NFT <FiLayers className="ml-2" />
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                </button>
-                <button
-                  className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-110 shadow-lg relative overflow-hidden group cursor-pointer flex items-center"
-                  onClick={() => setOpenTokenModal(true)}
-                >
-                  <span className="relative z-10 flex items-center">
-                    Create Token (RemitPKR) <FiBox className="ml-2" />
-                  </span>
-                  <span className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                </button>
-              </>
-            )}
-          </div>
+          <HashLink
+            smooth
+            to="/account"
+            className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-amber-600 to-rose-700 hover:from-amber-700 hover:to-rose-800 transition-all duration-300 shadow-lg relative overflow-hidden group cursor-pointer flex items-center mx-auto w-fit"
+          >
+            <span className="relative z-10 flex items-center">
+              Go to Account Dashboard <FaRocket className="ml-2" />
+            </span>
+            <span className="absolute inset-0 bg-gradient-to-r from-amber-700 to-rose-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+          </HashLink>
         </div>
       </section>
 
       {/* Simulations Section */}
-      <section id="simulations" ref={simulationsRef} className="py-20 px-6 bg-gradient-to-r from-indigo-100/80 to-purple-100/80">
+      <section id="simulations" ref={simulationsRef} className="py-20 px-6 bg-gradient-to-r from-amber-100/80 to-rose-100/80">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-5xl font-bold text-gray-800 mb-12 text-center tracking-tight">
-            Investor <span className="bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">Simulations</span>
+            Explore <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">Investor Simulations</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div ref={addSimulationRef} className="cursor-pointer">
+          <div className="grid grid-cols-1 gap-10">
+            <div ref={addSimulationRef} className="cursor-pointer opacity-0">
               <CostComparison />
             </div>
-            <div ref={addSimulationRef} className="cursor-pointer">
+            <div ref={addSimulationRef} className="cursor-pointer opacity-0">
               <MarketExpansion />
             </div>
-          </div>
-          <div className="mt-12" ref={addSimulationRef} className="cursor-pointer">
-            <ImpactChart />
+            <div ref={addSimulationRef} className="cursor-pointer opacity-0">
+              <ImpactChart />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer id="contact" ref={footerRef} className="py-12 px-6 bg-white/90 text-center">
+      <footer id="contact" ref={footerRef} className="py-16 px-6 bg-gradient-to-br from-amber-600/5 to-rose-600/10 text-center opacity-0">
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">Ready to transform global payments?</h3>
-          <p className="text-gray-600 text-lg mb-4 flex items-center justify-center">
-            <FiMail className="mr-2" /> Contact us: info@remitx.com
-          </p>
-          <p className="text-gray-500">&copy; 2025 RemitX. All rights reserved.</p>
+          {/* 3D Footer Container */}
+          <div className="bg-gradient-to-br from-white to-amber-50/80 rounded-2xl shadow-2xl p-10 border border-amber-200 transform perspective-1000">
+            <div className="transform rotate-x-2">
+              <h3 className="text-4xl font-bold text-gray-800 mb-6">Ready to Redefine Global Payments?</h3>
+              <p className="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
+                Join thousands of users who are already enjoying instant, low-cost global money transfers with AlgoRemit.
+              </p>
+
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-12">
+                <HashLink
+                  to="/account"
+                  className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-amber-600 to-rose-700 hover:from-amber-700 hover:to-rose-800 transition-all duration-300 shadow-lg hover:shadow-amber-400/30 relative overflow-hidden group cursor-pointer inline-flex items-center"
+                >
+                  <span className="relative z-10 flex items-center">
+                    Get Started <FaRocket className="ml-2" />
+                  </span>
+                </HashLink>
+                <a
+                  href="mailto:info@algoremit.com"
+                  className="px-8 py-4 rounded-full font-bold bg-white text-amber-600 border-2 border-amber-600 hover:bg-amber-50 transition-all duration-300 shadow-lg hover:shadow-amber-400/20 inline-flex items-center"
+                >
+                  <FiMail className="mr-2" /> Contact Us
+                </a>
+              </div>
+
+              <div className="mb-10">
+                <h4 className="text-lg font-semibold text-gray-700 mb-6">Partners & Integrations</h4>
+                <div className="flex flex-wrap justify-center gap-8 text-3xl text-gray-600">
+                  <SiAlgorand className="text-black hover:text-amber-600 transition-colors" title="Algorand" />
+                  <SiVisa className="hover:text-amber-600 transition-colors" title="Visa" />
+                  <SiMastercard className="hover:text-amber-600 transition-colors" title="Mastercard" />
+                  <SiPaypal className="hover:text-amber-600 transition-colors" title="PayPal" />
+                  <SiWesternunion className="hover:text-amber-600 transition-colors" title="Western Union" />
+                  <SiCashapp className="hover:text-amber-600 transition-colors" title="Monese" />
+                </div>
+              </div>
+
+              <div className="border-t border-amber-200 pt-8">
+                <div className="flex flex-col md:flex-row justify-between items-center">
+                  <div className="mb-6 md:mb-0">
+                    <HashLink smooth to="/#home" className="text-2xl font-bold text-amber-600 flex items-center">
+                      <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">AlgoRemit</span>
+                    </HashLink>
+                  </div>
+
+                  <div className="flex flex-wrap justify-center gap-8 mb-6 md:mb-0">
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      Terms
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      Privacy
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      Security
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      Careers
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      Press
+                    </a>
+                  </div>
+
+                  <div className="flex gap-6 text-xl">
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      <FiTwitter />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      <FiLinkedin />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      <FiGithub />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-amber-600 transition-colors">
+                      <FiMail />
+                    </a>
+                  </div>
+                </div>
+
+                <p className="text-gray-500 mt-8">&copy; 2025 AlgoRemit. All rights reserved.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </footer>
 
-      {/* Modals */}
-      <ConnectWallet open={openWalletModal} setOpen={setOpenWalletModal} />
-      <Transact open={openTransactModal} setOpen={setOpenTransactModal} />
-      <NFTmint open={openNFTmintModal} setOpen={setOpenNFTmintModal} />
-      <Tokenmint open={openTokenModal} setOpen={setOpenTokenModal} />
+      <style>{`
+        @keyframes orbFloat {
+          0%,
+          100% {
+            transform: translate(0, 0) rotate(0deg);
+          }
+          50% {
+            transform: translate(${Math.random() > 0.5 ? '150px' : '-150px'}, ${Math.random() > 0.5 ? '-100px' : '100px'})
+              rotate(${Math.random() > 0.5 ? '360deg' : '-360deg'});
+          }
+        }
+        .animate-orbFloat {
+          animation: orbFloat infinite ease-in-out;
+        }
 
-      <style jsx>{`
-        @keyframes float1 {
+        @keyframes particleFloat {
           0%,
           100% {
             transform: translateY(0) rotate(0deg);
@@ -548,23 +425,43 @@ const Home = () => {
             transform: translateY(-20px) rotate(5deg);
           }
         }
-        @keyframes float2 {
-          0%,
-          100% {
-            transform: translateY(0) rotate(0deg);
+        .animate-particleFloat {
+          animation: particleFloat infinite ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(40px);
           }
-          50% {
-            transform: translateY(-15px) rotate(-5deg);
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
-        @keyframes float3 {
-          0%,
+        .animate-fadeInUp {
+          animation: fadeInUp 1.2s ease-out forwards;
+        }
+
+        @keyframes marquee {
+          0% {
+            transform: translateX(100%);
+          }
           100% {
-            transform: translateY(0) rotate(0deg);
+            transform: translateX(-100%);
           }
-          50% {
-            transform: translateY(-10px) rotate(3deg);
-          }
+        }
+        .animate-marquee {
+          display: inline-block;
+          animation: marquee 30s linear infinite;
+        }
+
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+
+        .rotate-x-2 {
+          transform: rotateX(2deg);
         }
       `}</style>
     </div>
