@@ -270,25 +270,25 @@ const Home = () => {
       </section>
 
       {/* Demo Section */}
-      <section id="demo" ref={demoRef} className="py-20 px-6 flex items-center justify-center">
+      <section id="demo" ref={demoRef} className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
         <div
           ref={demoCardRef}
-          className="relative z-10 backdrop-blur-lg bg-white/80 p-10 rounded-3xl shadow-xl w-full max-w-4xl mx-4 text-center border border-amber-100 cursor-pointer opacity-0"
+          className="relative z-10 backdrop-blur-lg bg-white/90 p-8 sm:p-12 rounded-3xl shadow-2xl w-full max-w-5xl mx-auto text-center border border-amber-200/50 cursor-pointer opacity-0"
         >
-          <h2 className="text-4xl font-bold text-gray-800 mb-8 tracking-tight">
-            Experience the{' '}
-            <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">AlgoRemit Advantage</span>
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6 sm:mb-8 tracking-tight">
+            Discover the{' '}
+            <span className="bg-gradient-to-r from-amber-600 to-rose-700 bg-clip-text text-transparent">AlgoRemit Experience</span>
           </h2>
-          <p className="text-gray-600 mb-8 text-lg max-w-2xl mx-auto">
-            Test-drive our blockchain-powered platform and see how AlgoRemit redefines cross-border payments.
+          <p className="text-gray-600 mb-8 text-base sm:text-lg max-w-3xl mx-auto">
+            Explore our blockchain-powered platform to send ALGO, mint tokens, and create NFTs seamlessly on the Algorand TestNet.
           </p>
           <HashLink
             smooth
-            to="/account"
-            className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-amber-600 to-rose-700 hover:from-amber-700 hover:to-rose-800 transition-all duration-300 shadow-lg relative overflow-hidden group cursor-pointer flex items-center mx-auto w-fit"
+            to="/send"
+            className="px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-amber-600 to-rose-700 hover:from-amber-700 hover:to-rose-800 transition-all duration-300 shadow-lg hover:shadow-amber-400/30 relative overflow-hidden group cursor-pointer flex items-center mx-auto w-fit"
           >
             <span className="relative z-10 flex items-center">
-              Go to Account Dashboard <FaRocket className="ml-2" />
+              Try Sending & Minting Now <FaRocket className="ml-2" />
             </span>
             <span className="absolute inset-0 bg-gradient-to-r from-amber-700 to-rose-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
           </HashLink>

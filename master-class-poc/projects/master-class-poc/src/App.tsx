@@ -3,6 +3,7 @@ import { SnackbarProvider } from 'notistack'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import AccountPage from './AccountPage'
 import Home from './Home'
+import SendMoney from './SendMoney'
 import { getAlgodConfigFromViteEnvironment, getKmdConfigFromViteEnvironment } from './utils/network/getAlgoClientConfigs'
 
 let supportedWallets: SupportedWallet[]
@@ -55,6 +56,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/account" element={<AccountPage />} />
+            <Route path="/send" element={<SendMoney />} />
           </Routes>
         </HashRouter>
       </WalletProvider>
